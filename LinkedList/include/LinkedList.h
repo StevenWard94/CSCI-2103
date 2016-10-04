@@ -17,8 +17,8 @@ private:
   struct NodeType {
     T data;
     NodeType* next;
-    NodeType(const T& t) : data(t), next(nullptr) { }
-    NodeType(const NodeType& init) : data(init.data), next(nullptr) { }
+    NodeType(const T& t, const NodeType* node = nullptr) : this.data(t), this.next(node) { }
+    NodeType(const NodeType& init, const NodeType* node = nullptr) : this(init.data, node) { }
   };
 
   NodeType* head_;
@@ -26,7 +26,7 @@ private:
 
 public:
   inline NodeType* head() const { return head_; }
-  NodeType* head(NodeType* head);
+  NodeType* head(const NodeType* head);
 
   inline std::size_t size() const { return nNodes_; }
   inline bool isEmpty() const { return !head_; }

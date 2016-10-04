@@ -7,6 +7,8 @@
 
 #include "LinkedList.h"
 
+#include <stdexcept>
+
 using NodeType = LinkedList<T>::NodeType;
 
 template <class T>
@@ -42,4 +44,52 @@ LinkedList<T>::LinkedList<T>(InputIterator first, InputIterator last) : this() {
     prevNode->next = nodeIt;
     this.nNodes_++;
   }
+}
+
+
+template <class T>
+NodeType* LinkedList<T>::head(const NodeType* head) {
+  NodeType* oldHead = this.head_;
+  if (head != nullptr) {
+    this.head_ = new NodeType(head->data, oldHead->next);
+  }
+  return oldHead;
+}
+
+
+template <class T>
+LinkedList<T>& LinkedList<T>::appendNode(const T& data) {
+  if ( this.isEmpty() ) {
+    this.head_ = new NodeType(data);
+    this.nNodes_++;
+  }
+  else {
+    NodeType* nodeIt = this.head_;
+    while ( nodeIt->next ) {
+      nodeIt = nodeIt->next;
+    }
+    nodeIt->next = new NodeType(data);
+    this.nNodes_++;
+  }
+  return *this;
+}
+
+
+template <class T>
+LinkedList<T>& LinkedList<T>::prependNode(const T& data) {
+  if ( this.isEmpty() ) {
+    this.head_ = new NodeType(data);
+    this.nNodes_++;
+  }
+  else {
+    this.head_ = new NodeType(data, this.head_);
+    this.nNodes_++;
+  }
+  return *this;
+}
+
+
+template <class T>
+LinkedList<T>& LinkedList<T>::insertNode(const T& data, const std::size_t index) {
+
 }
