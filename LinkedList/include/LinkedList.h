@@ -2,7 +2,7 @@
  * Author:        Steven Ward <stevenward94@gmail.com>
  * Project:       LinkedList
  * File:          include/LinkedList.h
- * Last Change:   2016 Sep 30
+ * Last Change:   2016 Oct 04
  **************************************************************************************/
 
 #ifndef INCLUDE_LINKEDLIST_H_
@@ -35,16 +35,16 @@ public:
   LinkedList<T>& prependNode(const T& data);
   LinkedList<T>& insertNode(const T& data, const std::size_t index);
 
+  std::size_t find(const T& value, const std::size_t pos = 0) const;
+  std::size_t count(const T& value, const std::size_t pos = 0) const;
+  T& at(const std::size_t index);
+  T& operator[] (const std::size_t index);
+
   LinkedList<T>& replaceNode(const T& newData, const T& old, const std::size_t pos = 0);
   LinkedList<T>& replaceNodeAt(const T& data, const std::size_t index);
 
   LinkedList<T>& deleteNode(const T& data);
   LinkedList<T>& deleteNode(const std::size_t index);
-
-  std::size_t find(const T& value, const std::size_t pos = 0) const;
-  std::size_t count(const T& value, const std::size_t pos = 0) const;
-  T& at(const std::size_t index) const;
-  NodeType& operator[] (std::size_t index);
 
   inline LinkedList<T>() : nNodes_(0), head_(nullptr) { }
   LinkedList<T>(const NodeType* head);
