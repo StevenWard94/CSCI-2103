@@ -2,7 +2,7 @@
  * Author:        Steven Ward <stevenward94@gmail.com>
  * Project:       LinkedList
  * File:          include/LinkedList.cpp
- * Last Change:   2016 Oct 04
+ * Last Change:   2016 Oct 05
  **************************************************************************************/
 
 #include "LinkedList.h"
@@ -33,7 +33,7 @@ LinkedList<T>::LinkedList<T>(const T& data) : this() {
 
 template <class T, class InputIterator>
 LinkedList<T>::LinkedList<T>(InputIterator first, InputIterator last) : this() {
-  if (first == last || first = nullptr) {
+  if (first == last || first == nullptr) {
     return;
   }
   this->head_ = new NodeType(*first);

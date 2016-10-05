@@ -2,7 +2,7 @@
  * Author:        Steven Ward <stevenward94@gmail.com>
  * Project:       LinkedList
  * File:          include/LinkedList.h
- * Last Change:   2016 Oct 04
+ * Last Change:   2016 Oct 05
  **************************************************************************************/
 
 #ifndef INCLUDE_LINKEDLIST_H_
@@ -23,6 +23,7 @@ private:
 
   NodeType* head_;
   std::size_t nNodes_;
+  NodeType* data(const std::size_t index);
 
 public:
   inline NodeType* head() const { return head_; }
