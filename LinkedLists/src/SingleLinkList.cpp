@@ -23,11 +23,11 @@ class List {
 
   /** inline accessor functions for private instance members */
   inline node_t* head( ) const { return this->head_; }
-  inline node_t* tail( ) const { return this->tail_; }
+  inline node_t* tail( )  const { return this->tail_; }
   inline size_t  size( ) const { return this->size_; }
 
   inline bool isEmpty( ) const {
-    return ( this->size_ == 0 && !this->head_ && !this->tail_ );
+    return ( this->size_ == 0 && this->head_ == nullptr );
   }
 
   List<T>& append(T const& data);
@@ -80,7 +80,68 @@ class node_t {
 
   node_t(T const& init_data = T(), node_t* const init_next = nullptr)
     : data(init_data), next(init_next) { }
+
+  node_t(node_t const* const init, node_t* const init_next = nullptr)
+    : data(init->data), next(init_next) { }
 };
+
+
+
+
+template<class T>
+List<T>& List<T>::append(T const& data) {
+  if (!isEmpty()) {
+    node_t* nodeIt = this->head_;
+    while (nodeIt->next != this->tail_) {
+      nodeIt = nodeIt->next;
+    }
+    nodeIt->next = new node_t(data, this->tail_);
+  }
+  else {
+    this->head_ = new node_t(data, this->tail_);
+  }
+  this->size_++;
+  return *this;
+}
+
+
+template<class T>
+List<T>& List<T>::prepend(T const& data) {
+  if (!isEmpty()) {
+    node_t* oldHead = this->head_;
+    this->head_ = new node_t(data, oldHead);
+  }
+  else {
+    this->head_ = new node_t(data, this->tail_);
+  }
+  this->size_++;
+  return *this;
+}
+
+
+template<class T>
+List<T>& List<T>::insert(T const& data, size_t index) {
+  if (index == 0) {
+    return this->prepend(data);
+  }
+  else if (index == this->size_) {
+    return this->append(data);
+  }
+  else if (index > this->size_) {
+    throw std::out_of_range("List<T>::insert() : arg 2, 'size_t index' out of range");
+  }
+  else {
+    node_t* nodeIt = this->head_;
+    node_t* prevNode = nullptr;
+    for (size_t i = 0; i < index; i++) {
+      prevNode = nodeIt;
+      nodeIt = nodeIt->next;
+    }
+    prevNode->next = new node_t(data, nodeIt);
+    this->size_++;
+  }
+  return *this;
+}
 }
 
 #endif    // (SRC_SINGLE_LINK_LIST_CPP_)
