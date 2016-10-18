@@ -2,7 +2,7 @@
  * Author:       Steven Ward <stevenward94@gmail.com>
  * File:         Structures/include/dynamic_stack.h
  * URL:          https://github.com/StevenWard94/csci-2103
- * Last Change:  2016 Oct 17
+ * Last Change:  2016 Oct 18
  ******************************************************************************/
 
 #ifndef STRUCTURES_INCLUDE_STACKS_DYNAMIC_STACK_H_
@@ -34,6 +34,9 @@ class ListStack {
 
     inline ListStack( ) : top_(nullptr), size_(0) { }
     ListStack(ListStack<value_type> const& );
+
+    template<class InputIterator>
+        ListStack(InputIterator first, InputIterator last);
     ~ListStack( );
 
     ListStack<value_type>& operator= (ListStack<value_type> const& );
@@ -115,7 +118,39 @@ inline ListStack<E>& ListStack<E>::copy(ListStack<E> const& init) {
     }
     return *this;
 }
-// TODO: IMPLEMENTATION FOR CONSTRUCTORS, DESTRUCTOR & ASSIGNMENT OPERATOR
+
+
+template<class E>
+inline ListStack<E>::ListStack(ListStack<value_type> const& init) : ListStack() {
+    this->copy(init);
+}
+
+
+template<class E>
+template<class InputIterator>
+inline ListStack<E>::ListStack( InputIterator first,
+                                InputIterator last ) : ListStack() {
+    for (InputIterator it = first; it != last; it++) {
+        this->push(*it);
+    }
+}
+
+
+template<class E>
+ListStack<E>::~ListStack( ) {
+    while (!this->isEmpty()) {
+        this->pop();
+    }
+}
+
+
+template<class E>
+ListStack<E>& ListStack<E>::operator= (ListStack<value_type> const& rhs) {
+    if (this != rhs) {
+        this->copy(rhs);
+    }
+    return *this;
+}
 
 
 }  // end 'stacks' namespace
