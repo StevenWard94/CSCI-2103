@@ -10,27 +10,27 @@
 
 template<class T>
 class Node {
-    using data_type = T;
+    using value_type = T;
   public:
-    inline data_type& data( ) const { return this->data_; }
-    inline void data(data_type const& data) { this->data_ = data; }
-    inline Node<data_type>* next( ) const { return this->next_; }
-    inline void next(Node<data_type> const* const node) { this->next_ = node; }
+    inline value_type& data( ) const { return this->data_; }
+    inline void data(value_type const& data) { this->data_ = data; }
+    inline Node<value_type>* next( ) const { return this->next_; }
+    inline void next(Node<value_type> const* const node) { this->next_ = node; }
 
-    inline Node(data_type const& data = data_type(),
-                Node<data_type> const* const node = nullptr)
+    inline Node(value_type const& data = value_type(),
+                Node<value_type> const* const node = nullptr)
             : data_(data), next_(next) { }
 
-    inline Node(Node<data_type> const* const init)
+    inline Node(Node<value_type> const* const init)
             : Node( init->data(), init->next() ) { }
 
-    inline Node(Node<data_type> const* const init,
-                Node<data_type> const* const alt_next)
+    inline Node(Node<value_type> const* const init,
+                Node<value_type> const* const alt_next)
             : Node( init->data(), alt_next ) { }
 
   private:
-    data_type data_;
-    Node<data_type>* next_;
+    value_type data_;
+    Node<value_type>* next_;
 
 };
 
