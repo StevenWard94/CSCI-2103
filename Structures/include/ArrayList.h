@@ -2,7 +2,7 @@
  * Author:       Steven Ward <stevenward94@gmail.com>
  * File:         <repository-root-dir>/Structures/include/ArrayList.h
  * URL:          https://github.com/StevenWard94/csci-2103
- * Last Change:  2016 Oct 18
+ * Last Change:  2016 Oct 19
  *
  * Implementation of a fixed-size list built on an array.
  ****************************************************************************/
@@ -26,6 +26,8 @@ class ArrayList {
   using pointer = T*;
 
   public:
+    static const size_t NPOS = -1;
+
     class iterator : public std::iterator<std::forward_iterator_tag, T>
     {
         node_type* rep_;
@@ -101,10 +103,10 @@ class ArrayList {
     };
 
     inline ArrayList( ) : length_(0), begin_(nullptr), end_(node_type()) { }
-    ArrayList(value_type const& default_init);
+    ArrayList(value_type const& );
     template <class InputIterator>
-      ArrayList(InputIterator first, InputIterator last);
-    ArrayList(ArrayList<value_type, SIZE> const& init);
+      ArrayList(InputIterator , InputIterator );
+    ArrayList(ArrayList<value_type, SIZE> const& );
 
     inline bool isEmpty( ) const { return begin_ == nullptr; }
     inline bool isFull( ) const { return length_ == SIZE_; }
@@ -117,6 +119,24 @@ class ArrayList {
     inline const_iterator& begin( ) const { return const_iterator(begin_); }
     inline iterator& end( ) { return iterator(end_); }
     inline const_iterator& end( ) const { return const_iterator(end_); }
+
+    bool contains(value_type const& ) const;
+    value_type& at(size_t );
+    value_type const& at(size_t ) const;
+    value_type& operator[](size_t );
+    value_type const& operator[](size_t ) const;
+
+    size_t find(value_type const& , size_t pos = 0) const;
+    size_t* findN(size_t , value_type const& , size_t pos = 0) const;
+
+    ArrayList<value_type, SIZE>& push_front(value_type const& );
+    ArrayList<value_type, SIZE>& push_back(value_type const& );
+    ArrayList<value_type, SIZE>& pop_front( );
+    ArrayList<value_type, SIZE>& pop_back( );
+    ArrayList<value_type, SIZE>& insert(size_t );
+    ArrayList<value_type, SIZE>& insertAfter(value_type const& );
+    ArrayList<value_type, SIZE>& insertAfter(iterator );
+    ArrayList<value_type, SIZE>& insertBefore(value_type const& );
 
   private:
     const size_t SIZE_ = SIZE;
