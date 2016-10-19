@@ -33,7 +33,7 @@ class Node {
     Node<data_type>* next_;
 };
 
-
+/*
 template<class T>
 inline bool operator==(Node<T> const& lhs, Node<T> const& rhs) {
     return lhs.data() == rhs.data();
@@ -63,5 +63,6 @@ template<class T>
 inline bool operator>=(Node<T> const& lhs, Node<T> const& rhs) {
     return !operator< (lhs,rhs);
 }
+*/
 
 #endif  // (STRUCTURES_INCLUDE_NODE_H_)

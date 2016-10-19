@@ -30,10 +30,50 @@ std::istream& operator>>(std::istream& is, Node<T>& node) {
     is >> data_in;
     node.data(data_in);
 
-    if (node.data() != data_in || node.next() != init_next) {
+    if (node.data() != data_in) {
         node.data(init_data);
-        node.next(init_next);
         is.setstate(std::ios::failbit);
     }
+    node.next(init_next);
     return is;
+}
+
+template<class T>
+std::istream& operator>>(std::istream& is, Node<T>* const node) {
+    is >> *node;
+    return is;
+}
+
+
+// overloads of equality/inequality operators
+template<class T>
+bool operator==(Node<T> const& lhs, Node<T> const& rhs) {
+    return lhs.data() == rhs.data();
+}
+
+template<class T>
+bool operator!=(Node<T> const& lhs, Node<T> const& rhs) {
+    return !operator==(lhs,rhs);
+}
+
+
+// overloads of comparison operators
+template<class T>
+bool operator< (Node<T> const& lhs, Node<T> const& rhs) {
+    return lhs.data() < rhs.data();
+}
+
+template<class T>
+bool operator> (Node<T> const& lhs, Node<T> const& rhs) {
+    return operator< (rhs,lhs);
+}
+
+template<class T>
+bool operator<= (Node<T> const& lhs, Node<T> const& rhs) {
+    return !operator> (lhs,rhs);
+}
+
+template<class T>
+bool operator>= (Node<T> const& lhs, Node<T> const& rhs) {
+    return !operator< (lhs,rhs);
 }
