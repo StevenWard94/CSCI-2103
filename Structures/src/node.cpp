@@ -3,7 +3,7 @@
  * File:         <repository-root-dir>/Structures/src/node_operators.cpp
  * URL:          https://github.com/StevenWard94/csci-2103
  * Last Change:  2016 Oct 18
- ******************************************************************************/
+ ****************************************************************************/
 
 #include "node.h"
 

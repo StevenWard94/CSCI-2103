@@ -3,7 +3,7 @@
  * File:         <repository-root-dir>/Structures/include/node.h
  * URL:          https://github.com/StevenWard94/csci-2103
  * Last Change:  2016 Oct 18
- ******************************************************************************/
+ ****************************************************************************/
 
 #ifndef STRUCTURES_INCLUDE_NODE_H_
 #define STRUCTURES_INCLUDE_NODE_H_
@@ -31,38 +31,8 @@ class Node {
   private:
     data_type data_;
     Node<data_type>* next_;
+
 };
 
-/*
-template<class T>
-inline bool operator==(Node<T> const& lhs, Node<T> const& rhs) {
-    return lhs.data() == rhs.data();
-}
-
-template<class T>
-inline bool operator!=(Node<T> const& lhs, Node<T> const& rhs) {
-    return !operator==(lhs,rhs);
-}
-
-template<class T>
-inline bool operator< (Node<T> const& lhs, Node<T> const& rhs) {
-    return lhs.data() < rhs.data();
-}
-
-template<class T>
-inline bool operator> (Node<T> const& lhs, Node<T> const& rhs) {
-    return operator< (rhs,lhs);
-}
-
-template<class T>
-inline bool operator<=(Node<T> const& lhs, Node<T> const& rhs) {
-    return !operator> (lhs,rhs);
-}
-
-template<class T>
-inline bool operator>=(Node<T> const& lhs, Node<T> const& rhs) {
-    return !operator< (lhs,rhs);
-}
-*/
 
 #endif  // (STRUCTURES_INCLUDE_NODE_H_)
