@@ -1,16 +1,14 @@
 /***************************************************************************//**
  * Author:       Steven Ward
- * File:         <repository-root-dir>/collections-framework/include/CollectionExceptions.h
+ * File:         <repository-root-dir>/collections-framework/include/Exceptions.h
  * URL:          https://github.com/StevenWard94/csci-2103/tree/collections-framework
- * Last Change:  2016 Oct 19
+ * Last Change:  2016 Oct 20
  ***************************************************************************/
-#ifndef COLLECTIONS_FRAMEWORK_INCLUDE_COLLECTION_EXCEPTIONS_H_
-#define COLLECTIONS_FRAMEWORK_INCLUDE_COLLECTION_EXCEPTIONS_H_
+#ifndef COLLECTIONS_FRAMEWORK_INCLUDE_EXCEPTIONS_H_
+#define COLLECTIONS_FRAMEWORK_INCLUDE_EXCEPTIONS_H_
 
 #include <stdexcept>
 #include <string>
-
-namespace collections {
 
 class UnsupportedOperationException : public std::runtime_error {
   public:
@@ -19,10 +17,20 @@ class UnsupportedOperationException : public std::runtime_error {
     explicit UnsupportedOperationException(char const* );
 
     char const* what( ) const noexcept override;
-
   private:
     char const* what_;
 };
-}
 
-#endif  // (COLLECTIONS_FRAMEWORK_INCLUDE_COLLECTION_EXCEPTIONS_H_)
+
+class AssertionError : public std::logic_error {
+  public:
+    inline AssertionError( ) : std::logic_error(""), what_("") { }
+    explicit AssertionError(std::string const& );
+    explicit AssertionError(char const* );
+
+    char const* what( ) const noexcept override;
+  private:
+    char const* what_;
+};
+
+#endif  // (COLLECTIONS_FRAMEWORK_INCLUDE_EXCEPTIONS_H_)
