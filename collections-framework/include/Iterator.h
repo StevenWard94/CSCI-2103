@@ -7,12 +7,19 @@
 #ifndef COLLECTIONS_FRAMEWORK_INCLUDE_ITERATOR_H_
 #define COLLECTIONS_FRAMEWORK_INCLUDE_ITERATOR_H_
 
+#include "Consumer.h"
 #include "Exceptions.h"
+
+#include <type_traits>
 
 namespace collections {
 
 template<class E>
 class Iterator {
+  template<typename T>
+    using invoke = typename T::type;
+  template<typename Condition>
+    using enableIf = invoke<std::enable_if<Condition::value>>;
   public:
     virtual bool hasNext( ) = 0;
     virtual E& next( ) = 0;
@@ -21,7 +28,12 @@ class Iterator {
         throw UnsupportedOperationException("Iterator::remove() : implementation undefined");
     }
 
-    //inline virtual void forEachRemaining()
+    template<class D, typename = enableIf< std::is_base_of<D,E> >>
+    void forEachRemaining(Consumer<D>& action) {
+        while (hasNext()) {
+            action.accept(next());
+        }
+    }
 
 };
 }

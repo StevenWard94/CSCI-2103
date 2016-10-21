@@ -14,7 +14,7 @@ class Consumer {
     virtual void accept(T& t) = 0;
 
     virtual Consumer<T>& andThen(Consumer<T>& after) {
-        return [&, this] (T& t) { accept(t); after.accept(t); };
+        return [this, &after] (T& t) { accept(t); after.accept(t); };
     }
 };
 
