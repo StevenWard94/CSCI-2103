@@ -7,6 +7,7 @@
 #ifndef COLLECTIONS_FRAMEWORK_UTILITIES_LIBRARY_H_
 #define COLLECTIONS_FRAMEWORK_UTILITIES_LIBRARY_H_
 
+#include <cstdint>
 #include <type_traits>
 
 namespace util_lib {
@@ -44,6 +45,12 @@ using super = typename std::enable_if<std::is_base_of<Test,Type>::value || std::
 
 template<class Type, class Test>
 using extends = typename std::enable_if<std::is_base_of<Type,Test>::value || std::is_same<Type,Test>::value>::type;
+
+template<class Type, class Test>
+using related =
+        typename std::enable_if< std::is_base_of<Type,Test>::value
+                                 || std::is_base_of<Test,Type>::value
+                                 || std::is_same<Test,Type>::value >::type;
 
 template<class Object>
 bool isNull(Object obj) {
