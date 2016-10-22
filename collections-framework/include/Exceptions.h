@@ -1,9 +1,9 @@
-/***************************************************************************//**
+/***********************************************************************************//**
  * Author:       Steven Ward
  * File:         <repository-root-dir>/collections-framework/include/Exceptions.h
  * URL:          https://github.com/StevenWard94/csci-2103/tree/collections-framework
  * Last Change:  2016 Oct 20
- ***************************************************************************/
+ ***********************************************************************************/
 #ifndef COLLECTIONS_FRAMEWORK_INCLUDE_EXCEPTIONS_H_
 #define COLLECTIONS_FRAMEWORK_INCLUDE_EXCEPTIONS_H_
 
