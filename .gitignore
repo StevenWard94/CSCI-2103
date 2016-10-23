@@ -6,3 +6,5 @@
 .notes/
 .local/
 **/.broken/
+
+collections-framework/lib/Streams/src/
