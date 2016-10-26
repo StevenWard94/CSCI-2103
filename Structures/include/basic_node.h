@@ -26,7 +26,7 @@ struct basic_node {
 
     /* copy semantics */
     inline basic_node(basic_node const& other) : data(other.data), next(other.next) { }
-    inline basic_node(basic_node const* const other) : basic_node(*other) { }
+    inline basic_node(basic_node const* other) : basic_node(*other) { }
 
     inline basic_node& operator=(basic_node const& other) {
         if (this != &other) {
