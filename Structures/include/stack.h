@@ -17,9 +17,8 @@ namespace base {
 
 template<typename T, template<typename> class Node>
 class stack {
-    using value_t = typename std::remove_reference<T>::type;
+    using value_t = T;
     using node_t = Node<T>;
-    using stack_t = typename std::remove_reference<stack<T, Node>>::type;
 
   public:
     inline value_t const& top( ) const { return top_; }
@@ -28,17 +27,19 @@ class stack {
     inline bool isEmpty( ) const { return top_ == nullptr; }
     inline constexpr bool isFull( ) const { return false; }
 
-    virtual stack_t& push(value_t const& ) = 0;
-    virtual stack_t& push(value_t&& ) = 0;
+    virtual stack& push(value_t const& val) = 0;
+    virtual stack& push(value_t&& val) = 0;
 
-    virtual stack_t& pop( ) = 0;
+    virtual stack& pop( ) = 0;
     virtual value_t&& pop_get( ) = 0;
 
-    virtual stack_t& copy( ) const = 0;
+    virtual stack& copy( ) const = 0;
     virtual void clear( ) = 0;
 
-    virtual stack_t& operator=(stack const& ) = 0;
-    virtual stack_t& operator=(stack&& ) = 0;
+    virtual stack& operator=(stack const& other) = 0;
+    virtual stack& operator=(stack&& other) = 0;
+
+    virtual ~stack( ) { }
 
   protected:
     inline stack(node_t const* top = nullptr, size_t size = 0)
@@ -65,24 +66,24 @@ class stack {
         this->top_ = nullptr;
     }
 
-    inline stack_t& operator++( ) {
+    inline stack& operator++( ) {
         ++size_;
         return *this;
     }
 
-    inline stack_t& operator--( ) {
+    inline stack& operator--( ) {
         size_ -= size_ == 0 ? 0 : 1;
         return *this;
     }
 
-    inline stack_t operator++(int) {
-        stack_t tmp = *this;
+    inline stack const& operator++(int) {
+        stack tmp = *this;
         ++(*this);
         return tmp;
     }
 
-    inline stack_t operator--(int) {
-        stack_t tmp = *this;
+    inline stack const& operator--(int) {
+        stack tmp = *this;
         --(*this);
         return tmp;
     }
@@ -91,7 +92,7 @@ class stack {
     node_t* top_;
     size_t size_;
 
-  friend void swap(stack_t lhs, stack_t rhs) {
+  friend void swap(stack& lhs, stack& rhs) {
       std::swap(lhs.top_, rhs.top_);
       std::swap(lhs.size_, rhs.size_);
   }
