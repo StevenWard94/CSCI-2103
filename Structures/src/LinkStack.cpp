@@ -21,8 +21,8 @@ class LinkStack {
     inline bool isEmpty( ) const { return !top_; }
     inline constexpr bool isFull( ) const { return false; }
 
-    LinkStack<T>& push(T const& val);
-    LinkStack<T>& push(T&& val);
+    LinkStack<T>& push(T const& t);
+    LinkStack<T>& push(T&& t);
 
     LinkStack<T>& pop( );
     T&& pop_get( );
@@ -35,8 +35,10 @@ class LinkStack {
 
     inline LinkStack( ) : top_(nullptr), size_(0) { }
     LinkStack(Node const* top);
-    LinkStack(LinkStack<T> const& other);
-    LinkStack(LinkStack<T>&& other);
+
+    inline LinkStack(LinkStack<T> const& other) : top_(other.top_), size_(other.size_) { }
+    inline LinkStack(LinkStack<T>&& other)
+            : top_(other.top_), size_(std::move(other.size_)) { other.top_ = nullptr; }
 
     ~LinkStack( );
 
@@ -47,7 +49,12 @@ class LinkStack {
 
         Node(T const& t = T(), Node const* node = nullptr) : data(t), next(node) { }
         Node(T&& t, Node const* node = nullptr) : data(std::forward<T>(t)), next(node) { }
+        Node(Node const& other) : data(other.data), next(other.next) { }
+        Node(Node&& other) : data(std::move(other.data)), next(other.next) {
+            other.next = nullptr;
+        }
 
+        Node& operator= (Node const& other) = delete;
         ~Node() = default;
     };
     Node* top_;
@@ -67,14 +74,20 @@ LinkStack<T>::LinkStack(Node const* top) : top_(top), size_(0) {
 
 
 template<class T>
-LinkStack<T>::LinkStack(LinkStack<T> const& other) : LinkStack( ) {
-    Node const* inputIt = other.top_;
-    Node* outputIt = this->top_;
-
-    while (inputIt != nullptr) {
-        outputIt = new Node(inputIt->data);
-        ++this->size_;
-        outputIt = outputIt->next;
-        inputIt = inputIt->next;
-    }
+LinkStack<T>& LinkStack<T>::push(T const& t) {
+    Node const* const pushed = this->top_;
+    this->top_ = new Node(t, pushed);
+    ++this->size_;
+    return *this;
 }
+
+
+template<class T>
+LinkStack<T>& LinkStack<T>::push(T&& t) {
+    Node const* const pushed = this->top_;
+    this->top_ = new Node (std::forward<T>(t), pushed);
+    ++this->size_;
+    return *this;
+}
+
+
