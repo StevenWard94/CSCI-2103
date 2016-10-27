@@ -25,7 +25,7 @@ class LinkStack {
     LinkStack<T>& push(T&& t);
 
     LinkStack<T>& pop( );
-    T&& pop_get( );
+    typename std::remove_reference<T>::type&& pop_get( );
 
     LinkStack<T>& copy( ) const;
     LinkStack<T>& clear( );
@@ -36,9 +36,9 @@ class LinkStack {
     inline LinkStack( ) : top_(nullptr), size_(0) { }
     LinkStack(Node const* top);
 
-    inline LinkStack(LinkStack<T> const& other) : top_(other.top_), size_(other.size_) { }
+    inline LinkStack(LinkStack<T> const& other) : top_(new Node(*(other.top_))), size_(other.size_) { }
     inline LinkStack(LinkStack<T>&& other)
-            : top_(other.top_), size_(std::move(other.size_)) { other.top_ = nullptr; }
+            : top_(std::move(*(other.top_))), size_(std::move(other.size_)) { other.top_ = nullptr; }
 
     ~LinkStack( );
 
@@ -49,8 +49,8 @@ class LinkStack {
 
         Node(T const& t = T(), Node const* node = nullptr) : data(t), next(node) { }
         Node(T&& t, Node const* node = nullptr) : data(std::forward<T>(t)), next(node) { }
-        Node(Node const& other) : data(other.data), next(other.next) { }
-        Node(Node&& other) : data(std::move(other.data)), next(other.next) {
+        Node(Node const& other) : data(T(other.data)), next(new Node(*(other.next))) { }
+        Node(Node&& other) : data(std::move(other.data)), next(std::move(other.next)) {
             other.next = nullptr;
         }
 
@@ -91,3 +91,67 @@ LinkStack<T>& LinkStack<T>::push(T&& t) {
 }
 
 
+template<class T>
+LinkStack<T>& LinkStack<T>::pop( ) {
+    Node const* const popped = this->top_;
+    this->top_ = popped->next;
+    --this->size_;
+    delete popped;
+    return *this;
+}
+
+
+template<class T>
+typename std::remove_reference<T>::type&& LinkStack<T>::pop_get( ) {
+    Node* const popped = this->top_;
+    this->top_ = popped->next;
+    T t_val = std::move(popped->data);
+    --this->size_;
+    delete popped;
+    return std::forward<T>(t_val);
+}
+
+
+template<class T>
+LinkStack<T>& LinkStack<T>::copy( ) const {
+    return std::forward<LinkStack<T>>(*this);
+}
+
+
+template<class T>
+LinkStack<T>& LinkStack<T>::clear( ) {
+    while (!this->isEmpty()) {
+        this->pop();
+    }
+    this->size_ = 0;
+    delete this->top_;
+    this->top_ = nullptr;
+    return *this;
+}
+
+
+template<class T>
+LinkStack<T>& LinkStack<T>::operator= (LinkStack<T> const& rhs) {
+    if (this != &rhs) {
+        delete this->top_;
+        this->top_ = new Node(*(rhs.top_));
+        this->size_ = rhs.size_;
+    }
+    return *this;
+}
+
+
+template<class T>
+LinkStack<T>& LinkStack<T>::operator= (LinkStack<T>&& rhs) {
+    return *this;
+}
+
+
+/*****************************************************************************
+ **********  END OF LINKSTACK<T> CLASS DEFINITION & IMPLEMENTATION  **********
+ *****************************************************************************/
+
+int main(int argc, char** argv) {
+
+    return 0;
+}
