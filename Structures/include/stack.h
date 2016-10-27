@@ -8,7 +8,9 @@
 #ifndef STRUCTURES_INCLUDE_BASE_STACK_H_
 #define STRUCTURES_INCLUDE_BASE_STACK_H_
 
+#include <type_traits>
 #include <utility>
+
 #include <stddef.h>
 
 namespace base {
@@ -33,27 +35,57 @@ class stack {
     virtual value_t&& pop_get( ) = 0;
 
     virtual stack_t& copy( ) const = 0;
+    virtual void clear( ) = 0;
 
     virtual stack_t& operator=(stack const& ) = 0;
     virtual stack_t& operator=(stack&& ) = 0;
 
   protected:
     inline stack(node_t const* top = nullptr, size_t size = 0)
-            : top_(top), size_(size) { }
+            : top_(std::forward<Node>(*top)), size_(size) { }
 
     inline stack(stack const& other)
             : top_(*other.top_), size_(other.size_) { }
 
     inline stack(stack&& other)
-            : top_(std::forward<stack>(other).top_), size_(std::forward<stack>(other).size_)
+            : top_(std::forward<Node>(*other.top_)), size_(std::move(other.size_))
     {
         other.top_ = nullptr;
         other.size_ = size_t();
     }
 
-    inline void top(node_t const* node) { this.top_ = new node_t(node); }
+    inline void top(node_t const* node) { this.top_ = node; }
+    inline node_t* top_ptr( ) const { return this->top_; }
     inline void size(size_t size) { this.size_ = size; }
 
+    template<typename Ptr, typename = typename std::enable_if<std::is_null_pointer<Ptr>::value>>
+    inline void top(Ptr np) {
+        this->clear();
+        delete this->top_;
+        this->top_ = nullptr;
+    }
+
+    inline stack_t& operator++( ) {
+        ++size_;
+        return *this;
+    }
+
+    inline stack_t& operator--( ) {
+        size_ -= size_ == 0 ? 0 : 1;
+        return *this;
+    }
+
+    inline stack_t operator++(int) {
+        stack_t tmp = *this;
+        ++(*this);
+        return tmp;
+    }
+
+    inline stack_t operator--(int) {
+        stack_t tmp = *this;
+        --(*this);
+        return tmp;
+    }
 
   private:
     node_t* top_;
