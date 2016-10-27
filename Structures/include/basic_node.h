@@ -2,7 +2,7 @@
  * Author:       Steven Ward <stevenward94@gmail.com>
  * File:         csci-2103/Structures/include/basic_node.h
  * URL:          https://github.com/StevenWard94/csci-2103
- * Last Change:  2016 Oct 25
+ * Last Change:  2016 Oct 26
  ***********************************************************************************/
 
 #ifndef STRUCTURES_INCLUDE_BASE_BASIC_NODE_H_
@@ -36,7 +36,7 @@ struct basic_node {
         }
         return *this;
     }
-    inline basic_node& operator=(basic_node const * const other) { return this->operator=(*other); }
+    inline basic_node& operator=(basic_node const* other) { return this->operator=(*other); }
 
     /* move semantics */
     inline basic_node(basic_node&& other) : data(std::move(other.data)), next(other.next) {
@@ -52,8 +52,9 @@ struct basic_node {
 
 
     friend void swap(basic_node& lhs, basic_node& rhs) {
-        std::swap(lhs.data, rhs.data);
-        std::swap(lhs.next, rhs.next);
+        basic_node tmp(std::move(lhs));
+        lhs = std::move(rhs);
+        rhs = std::move(tmp);
     }
 };
 

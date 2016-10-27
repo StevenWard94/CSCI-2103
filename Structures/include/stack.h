@@ -17,29 +17,35 @@ template<typename T, template<typename> class Node>
 class stack {
     using value_t = typename std::remove_reference<T>::type;
     using node_t = Node<T>;
-    using stack_t = typename std::remove_reference<stack<T, Node>>::type&&;
+    using stack_t = typename std::remove_reference<stack<T, Node>>::type;
 
   public:
     inline value_t const& top( ) const { return top_; }
     inline size_t size( ) const { return size_; }
 
-    virtual stack& push(value_t const& ) = 0;
-    virtual stack& push(value_t&& ) = 0;
+    inline bool isEmpty( ) const { return top_ == nullptr; }
+    inline constexpr bool isFull( ) const { return false; }
 
-    virtual stack& pop( ) = 0;
+    virtual stack_t& push(value_t const& ) = 0;
+    virtual stack_t& push(value_t&& ) = 0;
+
+    virtual stack_t& pop( ) = 0;
     virtual value_t&& pop_get( ) = 0;
 
-    virtual typename std::remove_reference<stack>::type& operator=(stack const& ) = 0;
-    virtual typename std::remove_reference<stack>::type& operator=(stack&& ) = 0;
+    virtual stack_t& copy( ) const = 0;
+
+    virtual stack_t& operator=(stack const& ) = 0;
+    virtual stack_t& operator=(stack&& ) = 0;
 
   protected:
     inline stack(node_t const* top = nullptr, size_t size = 0)
             : top_(top), size_(size) { }
 
-    inline stack(stack const& other) : top_(*other.top_), size_(other.size_) { }
+    inline stack(stack const& other)
+            : top_(*other.top_), size_(other.size_) { }
 
     inline stack(stack&& other)
-            : top_(std::move(*other.top_)), size_(std::move(other.size_))
+            : top_(std::forward<stack>(other).top_), size_(std::forward<stack>(other).size_)
     {
         other.top_ = nullptr;
         other.size_ = size_t();
@@ -48,7 +54,6 @@ class stack {
     inline void top(node_t const* node) { this.top_ = new node_t(node); }
     inline void size(size_t size) { this.size_ = size; }
 
-    virtual stack_t copy( ) const = 0;
 
   private:
     node_t* top_;
