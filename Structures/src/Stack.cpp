@@ -50,7 +50,7 @@ class Stack {
         Node( ) : data{ T() }, next(nullptr) { }
         Node(T const& item) : data(item), next(nullptr) { }
         Node(T const& item, Node const* node)
-                : data(item), next(new Node(*node)) { }
+                : data(item), next(node) { }
         Node(Node const& other) : data(other.data), next(new Node(*other.next)) { }
 
         ~Node( ) { }
@@ -60,8 +60,9 @@ class Stack {
 
 template<class T>
 void Stack<T>::push(T const& item) {
-    Node const* pushed = this->top_;
-    this->top_ = new Node(item, pushed);
+    Node const* const pushed = this->top_;
+    Node const* const newNode = new Node(item, pushed);
+    this->top_ = newNode;
     this->size_++;
 }
 
