@@ -38,8 +38,6 @@ class Stack {
     Stack& operator= (Stack&& rhs);
 
     inline Stack( ) : top_{ nullptr }, size_(0) { }
-    inline Stack(Node const* top, size_t size)
-            : top_{ new Node(*top) }, size_(size) { }
     Stack(Stack const& other);
     Stack(Stack&& other);
 
@@ -51,17 +49,15 @@ class Stack {
 
     struct Node {
         value_t data;
-        Node* next;
+        Node* next{ nullptr };
 
-        Node( ) : data{ value_t() }, next{ nullptr } { }
-        Node(value_t const& val, Node const* node = nullptr)
-                : data{ val }, next{ node } { }
+        Node( ) : data{ value_t() } { }
+        Node(value_t const& val) : data{ val } { }
 
-        Node(value_t&& val, Node const* node = nullptr)
-                : data{ std::move(val) }, next{ node } { }
+        Node(value_t&& val) : data{ std::move(val) } { }
 
         Node(Node const& other)
-                : data{ other.data }, next{ other.next } { }
+                : data{ other.data }, next{ *other.next } { }
 
         Node(Node&& other)
                 : data{ std::move(other.data) }, next{ std::move(other.next) }
@@ -86,7 +82,8 @@ inline T&& Stack<T>::top( ) const {
 
 template<typename T>
 inline Stack<T>& Stack<T>::push(T const& item) {
-    Node* const stacked = new Node(item, this->top_);
+    Node* const stacked = new Node(item);
+    stacked->next = this->top_;
     this->top_ = stacked;
     this->size_++;
     return *this;
@@ -95,7 +92,8 @@ inline Stack<T>& Stack<T>::push(T const& item) {
 
 template<typename T>
 inline Stack<T>& Stack<T>::push(T&& item) {
-    Node* const stacked = new Node(std::forward<T>(item), this->top_);
+    Node* const stacked = new Node(std::forward<T>(item));
+    stacked->next = this->top_;
     this->top_ = stacked;
     this->size_++;
     return *this;
@@ -105,7 +103,7 @@ inline Stack<T>& Stack<T>::push(T&& item) {
 template<typename T>
 inline Stack<T>& Stack<T>::pop( ) {
     if (!this->isEmpty()) {
-        Node* const tmp = this->top_;
+        Node* tmp = this->top_;
         this->top_ = tmp->next;
         this->size_--;
         delete tmp;
@@ -121,7 +119,7 @@ template<typename T>
 inline T&& Stack<T>::pop_get( ) {
     if (!this->isEmpty()) {
         T* popped = new T(std::move(this->top_->data));
-        this->pop;
+        this->pop();
         return std::forward<T>(*popped);
     }
     else {
@@ -134,7 +132,7 @@ template<typename T>
 inline Stack<T>& Stack<T>::clear( ) {
     Node* destructor = this->top_;
     while (destructor != nullptr) {
-        Node* const tmp = destructor;
+        Node* tmp = destructor;
         destructor = tmp->next;
         delete tmp;
         tmp = nullptr;
@@ -230,4 +228,47 @@ inline Stack<T>::Stack(Stack<T>&& other) : Stack() {
 template<typename T>
 inline Stack<T>::~Stack<T>( ) {
     this->clear();
+}
+
+
+
+
+int main(int argc, char** argv) {
+    std::cout << "Begin execution of 'main'..." << std::endl;
+
+    std::cout << "Default constructing a 'Stack<std::string>' instance...";
+    Stack<std::string> strStack;
+    std::cout << "Success!" << std::endl;
+
+    std::cout << "Please enter a sentence:" << std::endl;
+    std::string sentence;
+    std::getline(std::cin, sentence);
+
+    std::cout << "Splitting sentence into words and pushing on 'strStack'..." << std::endl;
+    size_t i = 0;
+    while (sentence.find(' ', i) != std::string::npos) {
+        size_t j = sentence.find(' ', i);
+        std::string word = sentence.substr(i, j - i);
+        strStack.push(word);
+        i = j + 1;
+        std::cout << "Pushed \"" << word << "\" onto 'strStack'..." << std::endl;
+    }
+    std::string lastWord = sentence.substr(i, sentence.size() - i);
+    strStack.push(lastWord);
+    std::cout << "Pushed \"" << lastWord << "\" onto 'strStack'" << std::endl;
+
+    std::cout << std::endl << "Copy-constructing 'stackCopy' from 'strStack'...";
+    Stack<std::string> stackCopy(strStack);
+    std::cout << "Success!" << std::endl;
+    std::cout << "Default constructing 'stackAssign' and assigning 'stackCopy' to it...";
+    Stack<std::string> stackAssign = stackCopy;
+    std::cout << "Success!" << std::endl;
+
+    std::cout << std::endl << "Let's see it backwards..." << std::endl;
+    while (!strStack.isEmpty()) {
+        std::cout << strStack.pop_get() << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
 }
