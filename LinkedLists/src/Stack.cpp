@@ -41,8 +41,9 @@ class Stack {
     inline Stack(Node const* top, size_t size)
             : top_{ new Node(*top) }, size_(size) { }
     Stack(Stack const& other);
+    Stack(Stack&& other);
 
-    ~Stack( );
+    virtual ~Stack( );
 
   private:
     Node* top_;
@@ -52,15 +53,19 @@ class Stack {
         value_t data;
         Node* next;
 
-        Node( ) = default;
+        Node( ) : data{ value_t() }, next{ nullptr } { }
         Node(value_t const& val, Node const* node = nullptr)
                 : data{ val }, next{ node } { }
 
         Node(value_t&& val, Node const* node = nullptr)
                 : data{ std::move(val) }, next{ node } { }
 
-        Node(Node const& other) = default;
-        Node(Node&& other) = default;
+        Node(Node const& other)
+                : data{ other.data }, next{ other.next } { }
+
+        Node(Node&& other)
+                : data{ std::move(other.data) }, next{ std::move(other.next) }
+        { other.next = nullptr; }
 
         Node& operator= (Node const& rhs) = default;
         Node& operator= (Node&& rhs) = default;
@@ -122,4 +127,107 @@ inline T&& Stack<T>::pop_get( ) {
     else {
         throw std::domain_error("Stack<T>::pop_get() : cannot remove element from empty stack");
     }
+}
+
+
+template<typename T>
+inline Stack<T>& Stack<T>::clear( ) {
+    Node* destructor = this->top_;
+    while (destructor != nullptr) {
+        Node* const tmp = destructor;
+        destructor = tmp->next;
+        delete tmp;
+        tmp = nullptr;
+    }
+    this->top_ = nullptr;
+    this->size_ = 0;
+    return *this;
+}
+
+
+template<typename T>
+inline Stack<T>& Stack<T>::clone( ) const {
+    return new Stack<T>(*this);
+}
+
+
+template<typename T>
+inline Stack<T>& Stack<T>::operator= (Stack<T> const& rhs) {
+    if (this != &rhs) {
+
+        if (!this->isEmpty()) {
+            this->clear();
+        }
+
+        Node const* inputIt = rhs.top_;
+        Node* outputIt = this->top_;
+
+        while (inputIt != nullptr) {
+            outputIt = new Node(inputIt->data);
+            this->size_++;
+            inputIt = inputIt->next;
+            outputIt = outputIt->next;
+        }
+    }
+    return *this;
+}
+
+
+template<typename T>
+inline Stack<T>& Stack<T>::operator= (Stack<T>&& rhs) {
+    if (this != &rhs) {
+
+        if (!this->isEmpty()) {
+            this->clear();
+        }
+
+        Node* inputIt = rhs.top_;
+        Node* outputIt = this->top_;
+
+        while (inputIt != nullptr) {
+            outputIt = new Node(std::forward<T>(inputIt->data));
+            this->size_++;
+            inputIt = inputIt->next;
+            outputIt = outputIt->next;
+        }
+    }
+    return *this;
+}
+
+
+template<typename T>
+inline Stack<T>::Stack(Stack<T> const& other) : Stack() {
+    if (!other.isEmpty()) {
+        Node const* inputIt = other.top_;
+        Node* outputIt = this->top_;
+
+        while (inputIt != nullptr) {
+            outputIt = new Node(inputIt->data);
+            this->size_++;
+            inputIt = inputIt->next;
+            outputIt = outputIt->next;
+        }
+    }
+}
+
+
+template<typename T>
+inline Stack<T>::Stack(Stack<T>&& other) : Stack() {
+    if (!other.isEmpty()) {
+        Node* inputIt = other.top_;
+        Node* outputIt = this->top_;
+
+        while (inputIt != nullptr) {
+            outputIt = new Node(std::forward<T>(inputIt->data));
+            this->size_++;
+            inputIt = inputIt->next;
+            outputIt = outputIt->next;
+        }
+    }
+}
+
+
+template<typename T>
+inline Stack<T>::~Stack<T>( ) {
+    this->clear();
 }
