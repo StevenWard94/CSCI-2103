@@ -118,9 +118,12 @@ inline Stack<T>& Stack<T>::pop( ) {
 template<typename T>
 inline T&& Stack<T>::pop_get( ) {
     if (!this->isEmpty()) {
-        T* popped = new T(std::move(this->top_->data));
-        this->pop();
-        return std::forward<T>(*popped);
+        Node* popped = this->top_;
+        this->top_ = popped->next;
+        this->size_--;
+        T val = std::move(popped->data);
+        delete popped;
+        return std::forward<T>(val);
     }
     else {
         throw std::domain_error("Stack<T>::pop_get() : cannot remove element from empty stack");
@@ -231,8 +234,7 @@ inline Stack<T>::~Stack<T>( ) {
 }
 
 
-
-
+// wasn't sure if the file needed a "demonstration" program in it...
 int main(int argc, char** argv) {
     std::cout << "Begin execution of 'main'..." << std::endl;
 
@@ -263,12 +265,6 @@ int main(int argc, char** argv) {
     std::cout << "Default constructing 'stackAssign' and assigning 'stackCopy' to it...";
     Stack<std::string> stackAssign = stackCopy;
     std::cout << "Success!" << std::endl;
-
-    std::cout << std::endl << "Let's see it backwards..." << std::endl;
-    while (!strStack.isEmpty()) {
-        std::cout << strStack.pop_get() << " ";
-    }
-    std::cout << std::endl;
 
     return 0;
 }
