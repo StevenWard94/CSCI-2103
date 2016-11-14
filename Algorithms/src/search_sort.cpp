@@ -17,6 +17,9 @@ namespace utils {
 
 template<class ...> using void_t = void;
 
+template<class Predicate, typename T = void>
+using enable_if_t = typename std::enable_if<Predicate::value, T>::type;
+
 template<class Type, typename = void>
 struct is_sortable : std::false_type { };
 
@@ -27,8 +30,9 @@ struct is_sortable<Type, void_t<decltype(std::declval<Type>() < std::declval<Typ
 
 namespace sort {
 
-template <class T, class = typename std::enable_if<utils::is_sortable<T>::value>::type>
-T* bubble(T* t_array, size_t size) {
+template<class T>
+typename utils::enable_if_t<utils::is_sortable<T>, T*>
+bubble(T* t_array, size_t size) {
     bool madeSwap = true;
     size_t i = 0;
     while (madeSwap) {
@@ -44,6 +48,33 @@ T* bubble(T* t_array, size_t size) {
         }
     }
     return t_array;
+}
+
+
+template<class OutputIterator>
+auto bubble(OutputIterator first, OutputIterator last)
+        -> utils::enable_if_t<utils::is_sortable<decltype(*first)>, OutputIterator>
+{
+    bool madeSwap = true;
+    OutputIterator fst = first;
+    while (madeSwap) {
+        madeSwap = false;
+        fst++;
+        for (OutputIterator it = fst; it != last; it++) {
+            if (*it > *(it + 1)) {
+                std::swap(*it, *(it + 1));
+                ++madeSwap;
+            }
+        }
+    }
+    return first;
+}
+
+
+template<class T>
+typename utils::enable_if_t<utils::is_sortable<T>, T*>
+selection(T* t_array, size_t size) {
+
 }
 
 } // namespace sort
