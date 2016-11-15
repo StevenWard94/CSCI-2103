@@ -74,7 +74,36 @@ auto bubble(OutputIterator first, OutputIterator last)
 template<class T>
 typename utils::enable_if_t<utils::is_sortable<T>, T*>
 selection(T* t_array, size_t size) {
+    for (size_t i = 0; i < size - 1; i++) {
+        size_t minimumAt = i;
+        for (size_t j = i + 1; j < size; j++) {
+            minimumAt = *(t_array + j) < *(t_array + minimumAt) ? j : minimumAt;
+        }
+        if (minimumAt != i) {
+            T* fst = t_array + i;
+            T* snd = t_array + minimumAt;
+            std::swap(*fst, *snd);
+        }
+    }
+    return t_array;
+}
 
+
+template<class OutputIterator>
+auto selection(OutputIterator first, OutputIterator last)
+        -> utils::enable_if_t<utils::is_sortable<decltype(*first)>, OutputIterator>
+{
+    OutputIterator outer, inner;
+    for (outer = first; outer != last - 1; outer++) {
+        OutputIterator minimum = outer;
+        for (inner = outer + 1; inner != last; inner++) {
+            minimum = *inner < *minimum ? inner : minimum;
+        }
+        if (minimum != outer) {
+            std::swap(*outer, *minimum);
+        }
+    }
+    return first;
 }
 
 } // namespace sort
