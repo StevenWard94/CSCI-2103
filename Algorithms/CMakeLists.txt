@@ -8,5 +8,5 @@ include_directories ( "${CMAKE_CURRENT_SOURCE_DIR}/src" )
 add_subdirectory ( src )
 add_subdirectory ( test )
 
-add_executable ( CurrentTest ${CURRENT_TEST} )
-target_link_libraries ( CurrentTest SearchAndSort )
+add_executable ( RunCurrentTest ${CURRENT_TEST} )
+target_link_libraries ( RunCurrentTest SearchAndSort )

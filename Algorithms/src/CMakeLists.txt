@@ -1,1 +1,1 @@
-add_library( SearchAndSort search_sort.cpp )
+add_library( SearchAndSort alt_search_sort.cpp )

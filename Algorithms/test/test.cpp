@@ -1,4 +1,4 @@
-#include "search_sort.cpp"
+#include "alt_search_sort.cpp"
 
 #include <iostream>
 #include <string>
@@ -18,7 +18,7 @@ std::string show(T* arr, size_t n) {
 
 
 template<class Iterator>
-std::string show(Iterator const fst, Iterator const last) {
+std::string show(Iterator fst, Iterator last) {
     std::string cntnr_str{ "{ " };
     for (Iterator it = fst; it != last; it++) {
         std::string buf = std::to_string(*it);
@@ -34,9 +34,13 @@ int main(int argc, char** argv) {
     std::vector<double> vec_A { 1.7, 9.2, 3.0, 12.6, 12.7, 12.8, 4.3 };
     std::vector<double> vec_B { 7.1, 2.9, 0.3, 62.1, 72.1, 82.1, 3.4 };
 
-    std::cout << "ARRAY TEST 1: " << show(arr_A, 5) << std::endl;
-    sort::bubble(arr_A, 5);
+    std::cout << "ARRAY BUBBLE SORT TEST: " << show(arr_A, 5) << std::endl;
+    sort::bubble(arr_A, (arr_A + 5));
     std::cout << "RESULT: " << show(arr_A, 5) << std::endl << std::endl;
+
+    std::cout << "VECTOR BUBBLE SORT TEST: " << show(vec_A.begin(), vec_A.end()) << std::endl;
+    sort::bubble(vec_A.begin(), vec_A.end());
+    std::cout << "RESULT: " << show(vec_A.begin(), vec_A.end()) << std::endl << std::endl;
 
     return 0;
 }
