@@ -28,8 +28,8 @@ struct is_ordered_type<T, void_t<decltype(std::declval<T>() < std::declval<T>())
 
 namespace sort {
 
-template<class RandomIt>
-auto bubble(RandomIt first, RandomIt last)
+template<class Iterator>
+auto bubble(Iterator first, Iterator last)
         -> utils::enable_if_t<utils::is_ordered_type<decltype(*first)>, void>
 {
     bool madeSwap = true;
@@ -44,6 +44,22 @@ auto bubble(RandomIt first, RandomIt last)
                 std::swap(*tmp, *it_front);
                 madeSwap = true;
             }
+        }
+    }
+}
+
+
+template<class Iterator>
+auto selection(Iterator first, Iterator last)
+        -> utils::enable_if_t<utils::is_ordered_type<decltype(*first)>, void>
+{
+    for (Iterator it_i = first; it_i != last - 1; it_i++) {
+        auto minimum = it_i;
+        for (Iterator it_j = it_i + 1; it_j != last; it_j++) {
+            minimum = *it_j < *minimum ? it_j : minimum;
+        }
+        if (minimum != it_i) {
+            std::swap(*it_i, *minimum);
         }
     }
 }
