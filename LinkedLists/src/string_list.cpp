@@ -72,6 +72,19 @@ std::ostream& operator<< (std::ostream& os, List<E> const& ls) {
     return os;
 }
 
+template<>
+std::ostream& operator<< (std::ostream& os, List<std::string> const& strls) {
+    typename List<std::string>::Node const* output_it = strls.head_;
+    while (output_it != nullptr) {
+        os << output_it->data;
+        output_it = output_it->next;
+        if (output_it != nullptr) {
+            std::cout << " ";
+        }
+    }
+    return os;
+}
+
 
 template<class E>
 List<E>& List<E>::add(value_t data, size_t pos/* = NPOS*/) {
@@ -100,7 +113,7 @@ List<E>& List<E>::remove(size_t pos/* = 0*/) {
         Node* leading_it  = this->head_;
         Node* trailing_it = nullptr;
 
-        for (size_t i = 0; i < pos, i < size(); i++) {
+        for (size_t i = 0; i < pos && i < size(); i++) {
             trailing_it = leading_it;
             leading_it  = leading_it->next;
         }
