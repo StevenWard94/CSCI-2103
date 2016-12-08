@@ -4,7 +4,10 @@
 
 .tmp/
 .notes/
-.local/
 **/.broken/
+
+**/.tags
+tags
+*.taghl
 
 collections-framework/lib/Streams/src/
