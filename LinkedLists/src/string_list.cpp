@@ -174,7 +174,6 @@ int main(int argc, char** argv) {
     while (iss >> word) {
         strList.add(word);
     }
-    std::cin.ignore();
 
     std::cout << std::endl << std::endl;
     std::cout << "OK! Now give me another word, just one this time: ";
@@ -182,10 +181,11 @@ int main(int argc, char** argv) {
     std::cout << "Cool, now give me a number: (between 1 and " << strList.size() << ") ";
     size_t num;
     std::cin >> num;
-    std::cin.ignore();
 
-    std::cout << "Here is your new and improved sentence!" << std::endl
-            << strList.add(str_buf, num - 1) << std::endl << std::endl;
+    std::cout << std::endl << "Here's your sentence with " << str_buf << " as the "
+            << num << (num == 1 ? "st" : num == 2 ? "nd" : num == 3 ? "rd" : "th")
+            << " word:" << std::endl << strList.add(str_buf, num - 1)
+            << std::endl << std::endl;
 
     std::cout << "Now we will try searching through your sentence!" << std::endl
             << "Just give me a word and I will give you its position in the sentence!"
@@ -193,8 +193,8 @@ int main(int argc, char** argv) {
     std::getline(std::cin, str_buf);
     size_t index = strList.find(str_buf);
     while (index == List<std::string>::NPOS) {
-        std::cout << "C'mon now! That word isn't in your sentence!" << std::endl
-                << "Give me another one: ";
+        std::cout << std::endl << "C'mon now! That word isn't in your sentence!"
+                << std::endl << "Give me another one: ";
         std::getline(std::cin, str_buf);
         index = strList.find(str_buf);
     }
