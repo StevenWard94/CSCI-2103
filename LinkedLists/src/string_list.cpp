@@ -5,6 +5,7 @@
  */
 
 #include <iostream>
+#include <limits>
 #include <string>
 #include <sstream>
 
@@ -160,6 +161,7 @@ typename List<E>::value_t List<E>::operator[](size_t index) {
 
 
 int main(int argc, char** argv) {
+    std::ios_base::sync_with_stdio(false);
     List<std::string> strList;
 
     std::cout << "Hello! Let's make a word list!" << std::endl << std::string(30, '*');
@@ -190,7 +192,12 @@ int main(int argc, char** argv) {
     std::cout << "Now we will try searching through your sentence!" << std::endl
             << "Just give me a word and I will give you its position in the sentence!"
             << std::endl;
+
+    if (std::cin.rdbuf()->in_avail()) {
+        std::cin.ignore(std::cin.rdbuf()->in_avail());
+    }
     std::getline(std::cin, str_buf);
+
     size_t index = strList.find(str_buf);
     while (index == List<std::string>::NPOS) {
         std::cout << std::endl << "C'mon now! That word isn't in your sentence!"
@@ -198,8 +205,11 @@ int main(int argc, char** argv) {
         std::getline(std::cin, str_buf);
         index = strList.find(str_buf);
     }
+    std::cout << std::endl << str_buf << " is the " << index + 1
+            << (index == 0 ? "st" : index == 1 ? "nd" : index == 2 ? "rd" : "th")
+            << " word in the new sentence!" << std::endl;
     std::cout << std::endl << "That reminds me, I think the sentence would be better without that word..."
-            << std::endl << "I'm just going to remove it for you." << std::endl
+            << std::endl << std::endl << "I'm just going to remove it for you:" << std::endl
             << strList.remove(index);
     std::cout << std::endl << std::endl << "Well, I think that is all we have time for..."
             << std::endl << "Goodbye for now!";
